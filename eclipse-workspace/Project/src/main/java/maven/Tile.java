@@ -1,18 +1,18 @@
 package maven;
 
 public class Tile {
-	double nLon;
-	double iLon = 0;
-	double nLat = 0;
-	double iLat = 0;
-	double nProf = 0;
-	double iProf =0;
-	double nTemp = 0;
-	double iTemp = 0;
-	double nTiempo ;
-	double iTiempo;
+	int nLon;
+	int iLon;
+	int nLat;
+	int iLat;
+	int nProf;
+	int iProf;
+	int nTemp;
+	int iTemp;
+	int nTiempo;
+	int iTiempo;
 
-	int[][][][][] arrayTile = new int [64][64][10][10][24]; // array 5 dimensiones
+	int[][][][][] arrayTile = new int[64][64][10][10][24]; // array 5 dimensiones
 
 	// N.B.
 	// niveles 0,1,2...
@@ -50,7 +50,7 @@ public class Tile {
 
 		double resolutionNetCDF = (Parametros.x2 - Parametros.x1) / Parametros.celdasLonNet;
 		double indiceArrayNetCDF = Math.floor((lon - Parametros.x1) / resolutionNetCDF);
-		if(indiceArrayNetCDF==476) {
+		if (indiceArrayNetCDF == 476) {
 			indiceArrayNetCDF--;
 		}
 		return indiceArrayNetCDF;
@@ -86,7 +86,7 @@ public class Tile {
 
 		double resolutionNetCDF = (Parametros.y2 - Parametros.y1) / Parametros.celdasLatNet;
 		double indiceArrayNetCDF = Math.floor((lat - Parametros.y1) / resolutionNetCDF);
-		if(indiceArrayNetCDF==401) {
+		if (indiceArrayNetCDF == 401) {
 			indiceArrayNetCDF--;
 		}
 		return indiceArrayNetCDF;
@@ -117,10 +117,10 @@ public class Tile {
 
 		return valores;
 	}
-	
+
 	int profundidadNetCDF(double p) {
-		for(int i=0; i<14; i++) {
-			if(p>=Parametros.arrayProf[i])
+		for (int i = 0; i < 14; i++) {
+			if (p >= Parametros.arrayProf[i])
 				return i;
 		}
 		return 14;
@@ -153,10 +153,3 @@ public class Tile {
 	}
 
 }
-
-
-
-
-
-
-

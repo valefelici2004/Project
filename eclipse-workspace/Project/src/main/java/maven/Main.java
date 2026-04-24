@@ -2,6 +2,8 @@ package maven;
 
 import java.io.IOException;
 
+import org.rocksdb.Options;
+import org.rocksdb.RocksDB;
 import org.rocksdb.RocksDBException;
 
 import ucar.ma2.Array;
@@ -20,7 +22,7 @@ public class Main {
 
 		// ACCEDER ARRAY 4D Y OBTENER EL VALOR DE TEMP
 		Variable temperadura = ncfile.findVariable("temp"); // Find a Variable, with the specified (escaped full) name.
-		
+
 		Tile tile = new Tile();
 
 		// exemplo tile 1 dia
@@ -30,7 +32,8 @@ public class Main {
 					for (int t = 0; t < 10; t++) {
 						for (int tiempo = 0; tiempo < 24; tiempo++) {
 
-							// valores reales desde al cubo al NETcdf, donde cada celda corresponde a una hora
+							// valores reales desde al cubo al NETcdf, donde cada celda corresponde a una
+							// hora
 							ValorReal lonRange = tile.longitudCubo(lon);
 							ValorReal latRange = tile.latitudCubo(lat);
 							ValorReal profRange = tile.profundidadCubo(prof);
@@ -43,40 +46,50 @@ public class Main {
 							int inicioLat = (int) tile.latitudNetCDF(latRange.min);
 							int finLat = (int) tile.latitudNetCDF(latRange.max);
 							int anchoLat = (finLat - inicioLat + 1);
-							int inicioProf = (int) tile.profundidadNetCDF(profRange.min); //min prof tiene index > porque al reverse
-							int finProf = (int) tile.profundidadNetCDF(profRange.max); //max prof tiene index < porque al reverse
-							int anchoProf = (inicioProf - finProf + 1); //hago fin-inicio porque al reverse por la prof
+							int inicioProf = (int) tile.profundidadNetCDF(profRange.min); // min prof tiene index >
+																							// porque al reverse
+							int finProf = (int) tile.profundidadNetCDF(profRange.max); // max prof tiene index < porque
+																						// al reverse
+							int anchoProf = (inicioProf - finProf + 1); // hago fin-inicio porque al reverse por la prof
 
 							int[] inicio = new int[] { tiempo, finProf, inicioLat, inicioLon };
-							int[] ancho = new int[] { 1, anchoProf, anchoLat, anchoLon }; //dim 1 de tiempo porque es una celda 
+							int[] ancho = new int[] { 1, anchoProf, anchoLat, anchoLon }; // dim 1 de tiempo porque es
+																							// una celda
 
-							Array datos = temperadura.read(inicio, ancho); // Read a section of the data for this Variable and return a memory resident Array.
+							Array datos = temperadura.read(inicio, ancho); // Read a section of the data for this
+																			// Variable and return a memory resident
+																			// Array.
 							int count = 0;
 
-							IndexIterator it = datos.getIndexIterator(); // Get an index iterator for traversing the array in canonical order.
+							IndexIterator it = datos.getIndexIterator(); // Get an index iterator for traversing the
+																			// array in canonical order.
 							while (it.hasNext()) { // control si hay un proximo valor
 								double valor = it.getDoubleNext(); // guarda el valor+va al valor proximo
 								if (valor >= tempRange.min && valor <= tempRange.max) {
 									count++;
 								}
 							}
-							
 
 							tile.arrayTile[lon][lat][prof][t][tiempo] = count;
-							
-							System.out.print(lon+" "+lat+" "+prof+" "+t+" "+tiempo+" ");
-							System.out.println("  contador:"+tile.arrayTile[lon][lat][prof][t][tiempo]);
+
+							//System.out.print(lon + " " + lat + " " + prof + " " + t + " " + tiempo + " ");
+							//System.out.println("  contador:" + tile.arrayTile[lon][lat][prof][t][tiempo]);
 						}
 					}
 				}
 			}
 		}
-		BaseDato b = new BaseDato();
-		byte[] key = EncoderDecoder.encodeKey((int)tile.nTiempo, (int)tile.iTiempo, (int)tile.nLat, (int)tile.iLat, (int)tile.nLon, (int)tile.iLon, (int)tile.nProf, (int)tile.iProf, (int)tile.nTemp, (int)tile.iTemp);
-		byte[] value = EncoderDecoder.encodeValue(tile.arrayTile);
-		b.dataBase(key, value);
-		
+
+		byte[] key = EncoderDecoder.encodeClave(tile); 
+		byte[] value = EncoderDecoder.encodeValor(tile.arrayTile);
+
+		RocksDB.loadLibrary(); //carga las librerias
+		Options options = new Options().setCreateIfMissing(true); //ajustes
+		RocksDB db = RocksDB.open(options, "mioDB"); //abre la base de datos
+		db.put(key, value); //guarda el valor en byte, lo que calcule antes, clave-valor 
+
+		db.close(); 
+
 		ncfile.close();
 	}
-} 
-
+}
