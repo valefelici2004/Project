@@ -1,0 +1,87 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <groupId>Project</groupId>
+  <artifactId>Project</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  
+   <properties>
+    <netcdfJavaVersion>5.5.2</netcdfJavaVersion>
+    <slf4jVersion>2.0.9</slf4jVersion>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+  </properties>
+  
+  
+  <repositories>
+    <repository>
+        <id>unidata-all</id>
+        <name>Unidata All</name>
+        <url>https://artifacts.unidata.ucar.edu/repository/unidata-all/</url>
+    </repository>
+</repositories>
+
+  <dependencies>
+  	<dependency>
+  <groupId>edu.ucar</groupId>
+  <artifactId>cdm-core</artifactId>
+  <version>${netcdfJavaVersion}</version>
+  <scope>compile</scope>
+</dependency>
+
+<dependency>
+  <groupId>org.slf4j</groupId>
+  <artifactId>slf4j-jdk14</artifactId>
+  <version>${slf4jVersion}</version>
+  <scope>runtime</scope>
+</dependency>
+
+<dependency>
+  <groupId>edu.ucar</groupId>
+  <artifactId>bufr</artifactId>
+  <version>${netcdfJavaVersion}</version>
+  <scope>runtime</scope>
+</dependency>
+
+<dependency>
+  <groupId>edu.ucar</groupId>
+  <artifactId>cdm-image</artifactId>
+  <version>${netcdfJavaVersion}</version>
+  <scope>runtime</scope>
+</dependency>
+
+<dependency>
+  <groupId>edu.ucar</groupId>
+  <artifactId>grib</artifactId>
+  <version>${netcdfJavaVersion}</version>
+  <scope>runtime</scope>
+</dependency>
+
+<dependency>
+  <groupId>edu.ucar</groupId>
+  <artifactId>netcdf4</artifactId>
+  <version>${netcdfJavaVersion}</version>
+  <scope>runtime</scope>
+</dependency>
+
+<dependency>
+  <groupId>edu.ucar</groupId>
+  <artifactId>opendap</artifactId>
+  <version>${netcdfJavaVersion}</version>
+  <scope>runtime</scope>
+</dependency>
+
+<dependency>
+    <groupId>com.opencsv</groupId>
+    <artifactId>opencsv</artifactId>
+    <version>4.1</version>
+</dependency>
+
+<dependency>
+  <groupId>org.rocksdb</groupId>
+  <artifactId>rocksdbjni</artifactId>
+  <version>7.10.2</version>
+</dependency>
+
+  </dependencies>
+</project>
