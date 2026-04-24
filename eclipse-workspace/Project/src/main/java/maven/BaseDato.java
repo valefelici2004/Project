@@ -21,5 +21,5 @@ public class BaseDato {
 	
 	 public void close() {
 	        db.close();
-	    }
+	    }//ciao
 }
