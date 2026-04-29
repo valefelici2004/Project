@@ -1,9 +1,10 @@
 package maven;
 
+import java.nio.ByteBuffer;
+
 public class Tile {
-	int nLon;
+	int nEspacio;
 	int iLon;
-	int nLat;
 	int iLat;
 	int nProf;
 	int iProf;
@@ -21,9 +22,9 @@ public class Tile {
 	// En input es necesario poner estos numeros
 
 	// LONGITUD
-	ValorReal longitudCubo(double j) {
+	ValorReal longitudCubo(int j) {
 
-		double nTiles = Math.pow(2, nLon + 1) - 1; // calculo el numero de tiles
+		double nTiles = Math.pow(2, nEspacio + 1) - 1; // calculo el numero de tiles
 		double resolucionTile = (Parametros.x2 - Parametros.x1) / (Math.ceil(nTiles / 2)); // resolucion 1 tile
 		double inicioTile = (Parametros.x1 + iLon * resolucionTile * (0.5)); // valor real inicio tile
 		double finTile = (Parametros.x1 + iLon * resolucionTile * (0.5) + resolucionTile); // valor real fin tile
@@ -57,9 +58,9 @@ public class Tile {
 	}
 
 	// LATITUD
-	ValorReal latitudCubo(double j) {
+	ValorReal latitudCubo(int j) {
 
-		double nTiles = Math.pow(2, nLat + 1) - 1;
+		double nTiles = Math.pow(2, nEspacio + 1) - 1;
 		double resolucionTile = (Parametros.y2 - Parametros.y1) / (Math.ceil(nTiles / 2));
 		double inicioTile = (Parametros.y1 + iLat * resolucionTile * (0.5));
 		double finTile = (Parametros.y1 + iLat * resolucionTile * (0.5) + resolucionTile);
@@ -93,7 +94,7 @@ public class Tile {
 	}
 
 	// PROFUNDIDAD
-	ValorReal profundidadCubo(double j) {
+	ValorReal profundidadCubo(int j) {
 
 		double nTiles = Math.pow(2, nProf + 1) - 1;
 		double resolucionTile = (Parametros.maxP - Parametros.minP) / ((Math.ceil(nTiles / 2)));
@@ -127,7 +128,7 @@ public class Tile {
 	}
 
 	// TEMPERATURA
-	ValorReal temperaturaCubo(double j) {
+	ValorReal temperaturaCubo(int j) {
 
 		double nTiles = Math.pow(2, nTemp + 1) - 1;
 		double resolucionTile = (Parametros.maxT - Parametros.minT) / ((Math.ceil(nTiles / 2)));
@@ -151,5 +152,109 @@ public class Tile {
 
 		return valores;
 	}
+	
+	// clave --> binario 
+		public static byte[] encodeClave(Tile tile) {
+			
+			// Objecto buffer
+			// A container for data of a specific primitive type
+			// A buffer is a linear, finite sequence of elements of a specific primitive
+			// type.
+			ByteBuffer buffer = ByteBuffer.allocate(Parametros.resolucionBuffer);
+
+			// Buffer alloca en cadena
+			buffer.put((byte) tile.nTiempo); // 1 byte por nivel
+			
+			//***************************
+			buffer.putLong(tile.iTiempo); // 8 byte por index tile
+			
+			buffer.put((byte) tile.nEspacio);
+			buffer.putLong(tile.iLat);
+			buffer.putLong(tile.iLon);
+			buffer.put((byte) tile.nProf);
+			buffer.putLong(tile.iProf);
+			buffer.put((byte) tile.nTemp);
+			buffer.putLong(tile.iTemp);
+
+			return buffer.array(); // Returns the byte array that backs this buffer
+		}
+		
+		
+		// binario --> clave decoder 
+		public Tile(byte clave[]) {
+			ByteBuffer buffer = ByteBuffer.wrap(clave);
+			this.nTiempo = buffer.get();
+			this.iTiempo = (int) buffer.getLong();
+			this.nEspacio = buffer.get();
+			this.iLat = (int) buffer.getLong();
+			this.iLon = (int) buffer.getLong();
+			this.nProf = buffer.get();
+			this.iProf = (int) buffer.getLong();
+			this.nTemp = buffer.get();
+		    this.iTemp = (int) buffer.getLong();
+		}
+
+
+		// valor --> binario
+		public static byte[] encodeValor(Tile tile ) {
+
+
+			int array[] = new int[Parametros.resolucionCubo];
+
+			//ORDINE!!!
+			// Da 5D a array lineare
+			int i = 0;
+			for (int tiempo = 0; tiempo < 24; tiempo++) {
+				for (int lat = 0; lat < 64; lat++) {
+					for (int lon = 0; lon < 64; lon++) {
+						for (int prof = 0; prof < 10; prof++) {
+							for (int temp = 0; temp < 10; temp++) {
+								
+								array[i] = tile.arrayTile[tiempo][lat][lon][prof][temp];
+								i++;
+							}
+						}
+					}
+				}
+			}
+
+			// Da array lineare a byte
+			ByteBuffer buffer = ByteBuffer.allocate(array.length * 4);
+			for (int index = 0; index < array.length; index++) {
+				buffer.putInt(array[index]);
+			}
+			return buffer.array();
+		}
+
+		// binario --> valor
+		public static void decodeValor(byte[] value) {
+
+			ByteBuffer buffer = ByteBuffer.wrap(value);
+
+			int array[] = new int[Parametros.resolucionCubo];
+
+			// Da byte a array lineare
+			for (int i = 0; i < array.length; i++) {
+				array[i] = buffer.getInt();
+			}
+
+			//ORDINE!!!
+			int cube[][][][][] = new int[24][64][64][10][10];
+			int index = 0;
+			// Da array lineare a 5D
+			for (int tiempo = 0; tiempo < 24; tiempo++) {
+				for (int lat = 0; lat < 64; lat++) {
+					for (int lon = 0; lon < 64; lon++) {
+						for (int prof = 0; prof < 10; prof++) {
+							for (int temp = 0; temp < 10; temp++) {
+								cube[tiempo][lat][lon][prof][temp] = array[index];
+								index++;
+							}
+						}
+					}
+				}
+			}
+		}
+
 
 }

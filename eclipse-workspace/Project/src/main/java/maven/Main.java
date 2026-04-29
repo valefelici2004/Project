@@ -23,7 +23,7 @@ public class Main {
 		// ACCEDER ARRAY 4D Y OBTENER EL VALOR DE TEMP
 		Variable temperadura = ncfile.findVariable("temp"); // Find a Variable, with the specified (escaped full) name.
 
-		Tile tile = new Tile();
+		//Tile tile = new Tile();
 
 		// exemplo tile 1 dia
 		for (int lon = 0; lon < 64; lon++) {
@@ -79,16 +79,6 @@ public class Main {
 				}
 			}
 		}
-
-		byte[] key = EncoderDecoder.encodeClave(tile); 
-		byte[] value = EncoderDecoder.encodeValor(tile.arrayTile);
-
-		RocksDB.loadLibrary(); //carga las librerias
-		Options options = new Options().setCreateIfMissing(true); //ajustes
-		RocksDB db = RocksDB.open(options, "mioDB"); //abre la base de datos
-		db.put(key, value); //guarda el valor en byte, lo que calcule antes, clave-valor 
-
-		db.close(); 
 
 		ncfile.close();
 	}
