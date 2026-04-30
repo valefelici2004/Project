@@ -13,7 +13,7 @@ public class Tile {
 	int nTiempo;
 	int iTiempo;
 
-	int[][][][][] arrayTile = new int[64][64][10][10][24]; // array 5 dimensiones
+	int[][][][][] arrayTile = new int[24][64][64][10][10]; // array 5 dimensiones --> ipercubo
 
 	// N.B.
 	// niveles 0,1,2...
@@ -22,7 +22,7 @@ public class Tile {
 	// En input es necesario poner estos numeros
 
 	// LONGITUD
-	ValorReal longitudCubo(int j) {
+	public ValorReal longitudCubo(int j) {
 
 		double nTiles = Math.pow(2, nEspacio + 1) - 1; // calculo el numero de tiles
 		double resolucionTile = (Parametros.x2 - Parametros.x1) / (Math.ceil(nTiles / 2)); // resolucion 1 tile
@@ -47,7 +47,7 @@ public class Tile {
 		return valores;
 	}
 
-	double longitudNetCDF(double lon) {
+	public double longitudNetCDF(double lon) {
 
 		double resolutionNetCDF = (Parametros.x2 - Parametros.x1) / Parametros.celdasLonNet;
 		double indiceArrayNetCDF = Math.floor((lon - Parametros.x1) / resolutionNetCDF);
@@ -58,7 +58,7 @@ public class Tile {
 	}
 
 	// LATITUD
-	ValorReal latitudCubo(int j) {
+	public ValorReal latitudCubo(int j) {
 
 		double nTiles = Math.pow(2, nEspacio + 1) - 1;
 		double resolucionTile = (Parametros.y2 - Parametros.y1) / (Math.ceil(nTiles / 2));
@@ -83,7 +83,7 @@ public class Tile {
 		return valores;
 	}
 
-	double latitudNetCDF(double lat) {
+	public double latitudNetCDF(double lat) {
 
 		double resolutionNetCDF = (Parametros.y2 - Parametros.y1) / Parametros.celdasLatNet;
 		double indiceArrayNetCDF = Math.floor((lat - Parametros.y1) / resolutionNetCDF);
@@ -94,7 +94,7 @@ public class Tile {
 	}
 
 	// PROFUNDIDAD
-	ValorReal profundidadCubo(int j) {
+	public ValorReal profundidadCubo(int j) {
 
 		double nTiles = Math.pow(2, nProf + 1) - 1;
 		double resolucionTile = (Parametros.maxP - Parametros.minP) / ((Math.ceil(nTiles / 2)));
@@ -119,7 +119,7 @@ public class Tile {
 		return valores;
 	}
 
-	int profundidadNetCDF(double p) {
+	public int profundidadNetCDF(double p) {
 		for (int i = 0; i < 14; i++) {
 			if (p >= Parametros.arrayProf[i])
 				return i;
@@ -128,7 +128,7 @@ public class Tile {
 	}
 
 	// TEMPERATURA
-	ValorReal temperaturaCubo(int j) {
+	public ValorReal temperaturaCubo(int j) {
 
 		double nTiles = Math.pow(2, nTemp + 1) - 1;
 		double resolucionTile = (Parametros.maxT - Parametros.minT) / ((Math.ceil(nTiles / 2)));
@@ -152,109 +152,88 @@ public class Tile {
 
 		return valores;
 	}
-	
-	// clave --> binario 
-		public static byte[] encodeClave(Tile tile) {
-			
-			// Objecto buffer
-			// A container for data of a specific primitive type
-			// A buffer is a linear, finite sequence of elements of a specific primitive
-			// type.
-			ByteBuffer buffer = ByteBuffer.allocate(Parametros.resolucionBuffer);
 
-			// Buffer alloca en cadena
-			buffer.put((byte) tile.nTiempo); // 1 byte por nivel
-			
-			//***************************
-			buffer.putLong(tile.iTiempo); // 8 byte por index tile
-			
-			buffer.put((byte) tile.nEspacio);
-			buffer.putLong(tile.iLat);
-			buffer.putLong(tile.iLon);
-			buffer.put((byte) tile.nProf);
-			buffer.putLong(tile.iProf);
-			buffer.put((byte) tile.nTemp);
-			buffer.putLong(tile.iTemp);
+	// CLAVE->BINARIO
+	public byte[] encodeClave() {
 
-			return buffer.array(); // Returns the byte array that backs this buffer
-		}
-		
-		
-		// binario --> clave decoder 
-		public Tile(byte clave[]) {
-			ByteBuffer buffer = ByteBuffer.wrap(clave);
-			this.nTiempo = buffer.get();
-			this.iTiempo = (int) buffer.getLong();
-			this.nEspacio = buffer.get();
-			this.iLat = (int) buffer.getLong();
-			this.iLon = (int) buffer.getLong();
-			this.nProf = buffer.get();
-			this.iProf = (int) buffer.getLong();
-			this.nTemp = buffer.get();
-		    this.iTemp = (int) buffer.getLong();
-		}
+		// Objecto buffer
+		// A container for data of a specific primitive type
+		// A buffer is a linear, finite sequence of elements of a specific primitive
+		// type.
+		ByteBuffer buffer = ByteBuffer.allocate(Parametros.resolucionBuffer);
 
+		// Buffer alloca en cadena
+		buffer.put((byte) nTiempo); // 1 byte por nivel
 
-		// valor --> binario
-		public static byte[] encodeValor(Tile tile ) {
+		// ***************************
+		buffer.putLong(iTiempo); // 8 byte por index tile
 
+		buffer.put((byte) nEspacio);
+		buffer.putLong(iLat);
+		buffer.putLong(iLon);
+		buffer.put((byte) nProf);
+		buffer.putLong(iProf);
+		buffer.put((byte) nTemp);
+		buffer.putLong(iTemp);
 
-			int array[] = new int[Parametros.resolucionCubo];
+		return buffer.array(); // Returns the byte array that backs this buffer
+	}
 
-			//ORDINE!!!
-			// Da 5D a array lineare
-			int i = 0;
-			for (int tiempo = 0; tiempo < 24; tiempo++) {
-				for (int lat = 0; lat < 64; lat++) {
-					for (int lon = 0; lon < 64; lon++) {
-						for (int prof = 0; prof < 10; prof++) {
-							for (int temp = 0; temp < 10; temp++) {
-								
-								array[i] = tile.arrayTile[tiempo][lat][lon][prof][temp];
-								i++;
-							}
-						}
-					}
-				}
-			}
+	// BINARIO->CLAVE
+	public void decodeClave(byte claveBin[]) {
 
-			// Da array lineare a byte
-			ByteBuffer buffer = ByteBuffer.allocate(array.length * 4);
-			for (int index = 0; index < array.length; index++) {
-				buffer.putInt(array[index]);
-			}
-			return buffer.array();
-		}
+		ByteBuffer buffer = ByteBuffer.wrap(claveBin);
 
-		// binario --> valor
-		public static void decodeValor(byte[] value) {
+		nTiempo = buffer.get();
+		iTiempo = (int) buffer.getLong();
+		nEspacio = buffer.get();
+		iLat = (int) buffer.getLong();
+		iLon = (int) buffer.getLong();
+		nProf = buffer.get();
+		iProf = (int) buffer.getLong();
+		nTemp = buffer.get();
+		iTemp = (int) buffer.getLong();
+	}
 
-			ByteBuffer buffer = ByteBuffer.wrap(value);
+	// VALOR->BINARIO
+	public byte[] encodeValor() {
 
-			int array[] = new int[Parametros.resolucionCubo];
+		ByteBuffer buffer = ByteBuffer.allocate(Parametros.resolucionCubo * 4);
 
-			// Da byte a array lineare
-			for (int i = 0; i < array.length; i++) {
-				array[i] = buffer.getInt();
-			}
+		int i = 0;
+		for (int tiempo = 0; tiempo < 24; tiempo++) {
+			for (int lat = 0; lat < 64; lat++) {
+				for (int lon = 0; lon < 64; lon++) {
+					for (int prof = 0; prof < 10; prof++) {
+						for (int temp = 0; temp < 10; temp++) {
 
-			//ORDINE!!!
-			int cube[][][][][] = new int[24][64][64][10][10];
-			int index = 0;
-			// Da array lineare a 5D
-			for (int tiempo = 0; tiempo < 24; tiempo++) {
-				for (int lat = 0; lat < 64; lat++) {
-					for (int lon = 0; lon < 64; lon++) {
-						for (int prof = 0; prof < 10; prof++) {
-							for (int temp = 0; temp < 10; temp++) {
-								cube[tiempo][lat][lon][prof][temp] = array[index];
-								index++;
-							}
+							buffer.putInt(arrayTile[tiempo][lat][lon][prof][temp]);
 						}
 					}
 				}
 			}
 		}
+		return buffer.array();
+	}
 
+	// BINARIO->VALOR
+	public void decodeValor(byte[] valorBin) {
+
+		ByteBuffer buffer = ByteBuffer.wrap(valorBin);
+
+		for (int tiempo = 0; tiempo < 24; tiempo++) {
+			for (int lat = 0; lat < 64; lat++) {
+				for (int lon = 0; lon < 64; lon++) {
+					for (int prof = 0; prof < 10; prof++) {
+						for (int temp = 0; temp < 10; temp++) {
+							arrayTile[tiempo][lat][lon][prof][temp] = buffer.getInt();
+							;
+
+						}
+					}
+				}
+			}
+		}
+	}
 
 }

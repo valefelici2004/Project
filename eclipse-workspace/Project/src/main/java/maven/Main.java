@@ -23,7 +23,7 @@ public class Main {
 		// ACCEDER ARRAY 4D Y OBTENER EL VALOR DE TEMP
 		Variable temperadura = ncfile.findVariable("temp"); // Find a Variable, with the specified (escaped full) name.
 
-		//Tile tile = new Tile();
+		Tile tile = new Tile();
 
 		// exemplo tile 1 dia
 		for (int lon = 0; lon < 64; lon++) {
@@ -70,7 +70,7 @@ public class Main {
 								}
 							}
 
-							tile.arrayTile[lon][lat][prof][t][tiempo] = count;
+							tile.arrayTile[tiempo][lat][lon][prof][t] = count;
 
 							//System.out.print(lon + " " + lat + " " + prof + " " + t + " " + tiempo + " ");
 							//System.out.println("  contador:" + tile.arrayTile[lon][lat][prof][t][tiempo]);
