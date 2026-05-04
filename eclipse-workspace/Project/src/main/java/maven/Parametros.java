@@ -27,7 +27,7 @@ public class Parametros {
 	public static final int celdasLatNet = 401;
 	public static final int arrayProf[] = { 4000, 3000, 2000, 1500, 1000, 500, 400, 250, 150, 125, 75, 35, 20, 10 };
 	
-	public static final int resolucionBuffer = 45;
-	public static final int resolucionCubo = 64*64*10*10*24;
+	public static final int resolucionBuffer = 4+5*4;
+	public static final int resolucionCubo = 24*64*64*10*10;
 
 }

@@ -1,5 +1,7 @@
 package maven;
 
+import java.io.IOException;
+
 import org.rocksdb.Options;
 import org.rocksdb.RocksDB;
 import org.rocksdb.RocksDBException;
@@ -17,7 +19,7 @@ public class RocksDBBaseDatos implements BaseDatos {
 	
 	//metodo PUT
 	@Override
-	public void put(Tile tile) throws RocksDBException{
+	public void put(Tile tile) throws RocksDBException, IOException{
 		byte clave[] = tile.encodeClave();
 		byte valor[] = tile.encodeValor();
 		db.put(clave, valor);

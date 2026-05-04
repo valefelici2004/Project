@@ -72,8 +72,6 @@ public class Main {
 
 							tile.arrayTile[tiempo][lat][lon][prof][t] = count;
 
-							//System.out.print(lon + " " + lat + " " + prof + " " + t + " " + tiempo + " ");
-							//System.out.println("  contador:" + tile.arrayTile[lon][lat][prof][t][tiempo]);
 						}
 					}
 				}

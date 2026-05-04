@@ -1,16 +1,21 @@
 package maven;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.nio.ByteBuffer;
 
 public class Tile {
-	int nEspacio;
+	byte nEspacio;
 	int iLon;
 	int iLat;
-	int nProf;
+	byte nProf;
 	int iProf;
-	int nTemp;
+	byte nTemp;
 	int iTemp;
-	int nTiempo;
+	byte nTiempo;
 	int iTiempo;
 
 	int[][][][][] arrayTile = new int[24][64][64][10][10]; // array 5 dimensiones --> ipercubo
@@ -166,15 +171,15 @@ public class Tile {
 		buffer.put((byte) nTiempo); // 1 byte por nivel
 
 		// ***************************
-		buffer.putLong(iTiempo); // 8 byte por index tile
+		buffer.putInt(iTiempo); // 8 byte por index tile
 
 		buffer.put((byte) nEspacio);
-		buffer.putLong(iLat);
-		buffer.putLong(iLon);
+		buffer.putInt(iLat);
+		buffer.putInt(iLon);
 		buffer.put((byte) nProf);
-		buffer.putLong(iProf);
+		buffer.putInt(iProf);
 		buffer.put((byte) nTemp);
-		buffer.putLong(iTemp);
+		buffer.putInt(iTemp);
 
 		return buffer.array(); // Returns the byte array that backs this buffer
 	}
@@ -185,19 +190,26 @@ public class Tile {
 		ByteBuffer buffer = ByteBuffer.wrap(claveBin);
 
 		nTiempo = buffer.get();
-		iTiempo = (int) buffer.getLong();
+		iTiempo = buffer.getInt();
 		nEspacio = buffer.get();
-		iLat = (int) buffer.getLong();
-		iLon = (int) buffer.getLong();
+		iLat = buffer.getInt();
+		iLon = buffer.getInt();
 		nProf = buffer.get();
-		iProf = (int) buffer.getLong();
+		iProf = buffer.getInt();
 		nTemp = buffer.get();
-		iTemp = (int) buffer.getLong();
+		iTemp = buffer.getInt();
 	}
 
 	// VALOR->BINARIO
-	public byte[] encodeValor() {
+	public byte[] encodeValor() throws IOException {
+		
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ObjectOutputStream oos = new ObjectOutputStream(bos);
 
+		oos.writeObject(arrayTile);
+		byte[] bytes = bos.toByteArray();
+
+		/*
 		ByteBuffer buffer = ByteBuffer.allocate(Parametros.resolucionCubo * 4);
 
 		int i = 0;
@@ -212,13 +224,20 @@ public class Tile {
 					}
 				}
 			}
-		}
-		return buffer.array();
+		}*/
+		return bytes;
 	}
 
 	// BINARIO->VALOR
-	public void decodeValor(byte[] valorBin) {
+	public void decodeValor(byte[] valorBin) throws IOException, ClassNotFoundException {
+		
+		ByteArrayInputStream bis = new ByteArrayInputStream(valorBin);
+		ObjectInputStream ois = new ObjectInputStream(bis);
 
+		int[][][][][] arrayDeserializzato = (int[][][][][]) ois.readObject();
+		arrayTile = arrayDeserializzato;
+	
+		/*
 		ByteBuffer buffer = ByteBuffer.wrap(valorBin);
 
 		for (int tiempo = 0; tiempo < 24; tiempo++) {
@@ -234,6 +253,7 @@ public class Tile {
 				}
 			}
 		}
+		*/
 	}
 
 }
