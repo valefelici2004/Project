@@ -14,7 +14,7 @@ import ucar.nc2.NetcdfFiles;
 import ucar.nc2.Variable;
 
 public class Main {
-	public static void main(String[] args) throws IOException, InvalidRangeException, RocksDBException {
+	public static void main(String[] args) throws IOException, InvalidRangeException, RocksDBException, ClassNotFoundException {
 
 		// Abrir file NetCDF
 		String filenombre = "/Users/valefelici2004/Desktop/roms_002_20260321_0000.nc4";
@@ -24,12 +24,15 @@ public class Main {
 		Variable temperadura = ncfile.findVariable("temp"); // Find a Variable, with the specified (escaped full) name.
 
 		Tile tile = new Tile();
+		
+		RocksDBBaseDatos db = new RocksDBBaseDatos("/Users/valefelici2004/Desktop/file");
+		db.put(tile);
 
 		// exemplo tile 1 dia
-		for (int lon = 0; lon < 64; lon++) {
-			for (int lat = 0; lat < 64; lat++) {
-				for (int prof = 0; prof < 10; prof++) {
-					for (int t = 0; t < 10; t++) {
+		for (int lon = 0; lon < Parametros.celdasEspacioCubo; lon++) {
+			for (int lat = 0; lat < Parametros.celdasEspacioCubo; lat++) {
+				for (int prof = 0; prof < Parametros.celdasPTCubo; prof++) {
+					for (int t = 0; t < Parametros.celdasPTCubo; t++) {
 						for (int tiempo = 0; tiempo < 24; tiempo++) {
 
 							// valores reales desde al cubo al NETcdf, donde cada celda corresponde a una
@@ -38,6 +41,7 @@ public class Main {
 							ValorReal latRange = tile.latitudCubo(lat);
 							ValorReal profRange = tile.profundidadCubo(prof);
 							ValorReal tempRange = tile.temperaturaCubo(t);
+							
 
 							// index NETcdf
 							int inicioLon = (int) tile.longitudNetCDF(lonRange.min);
@@ -45,13 +49,17 @@ public class Main {
 							int anchoLon = (finLon - inicioLon + 1);
 							int inicioLat = (int) tile.latitudNetCDF(latRange.min);
 							int finLat = (int) tile.latitudNetCDF(latRange.max);
-							int anchoLat = (finLat - inicioLat + 1);
+							int anchoLat = (int)(finLat - inicioLat + 1);
 							int inicioProf = (int) tile.profundidadNetCDF(profRange.min); // min prof tiene index >
 																							// porque al reverse
 							int finProf = (int) tile.profundidadNetCDF(profRange.max); // max prof tiene index < porque
-																						// al reverse
-							int anchoProf = (inicioProf - finProf + 1); // hago fin-inicio porque al reverse por la prof
-
+							
+							// al reverse
+							
+							
+							int anchoProf = (inicioProf - finProf + 1);// hago fin-inicio porque al reverse por la prof
+	
+							
 							int[] inicio = new int[] { tiempo, finProf, inicioLat, inicioLon };
 							int[] ancho = new int[] { 1, anchoProf, anchoLat, anchoLon }; // dim 1 de tiempo porque es
 																							// una celda
@@ -79,5 +87,9 @@ public class Main {
 		}
 
 		ncfile.close();
+		
+		RocksDBBaseDatos db1 = new RocksDBBaseDatos("/Users/valefelici2004/Desktop/file");
+		tile.safe(db1);
+		tile.load(db1);
 	}
 }

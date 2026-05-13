@@ -8,17 +8,17 @@ import java.io.ObjectOutputStream;
 import java.nio.ByteBuffer;
 
 public class Tile {
-	byte nEspacio;
-	int iLon;
-	int iLat;
-	byte nProf;
-	int iProf;
-	byte nTemp;
-	int iTemp;
-	byte nTiempo;
-	int iTiempo;
+	byte nEspacio = 1;
+	int iLon = 1;
+	int iLat = 2;
+	byte nProf = 1;
+	int iProf = 2;
+	byte nTemp = 1;
+	int iTemp = 1;
+	byte nTiempo = 0;
+	Tiempo iTiempo = new Tiempo();
 
-	int[][][][][] arrayTile = new int[24][64][64][10][10]; // array 5 dimensiones --> ipercubo
+	int[][][][][] arrayTile = new int[Parametros.celdasTiempoCubo][Parametros.celdasEspacioCubo][Parametros.celdasEspacioCubo][Parametros.celdasPTCubo][Parametros.celdasPTCubo]; // array 5 dimensiones --> ipercubo
 
 	// N.B.
 	// niveles 0,1,2...
@@ -54,7 +54,7 @@ public class Tile {
 
 	public double longitudNetCDF(double lon) {
 
-		double resolutionNetCDF = (Parametros.x2 - Parametros.x1) / Parametros.celdasLonNet;
+		double resolutionNetCDF = (double)(Parametros.x2 - Parametros.x1) / Parametros.celdasLonNet;
 		double indiceArrayNetCDF = Math.floor((lon - Parametros.x1) / resolutionNetCDF);
 		if (indiceArrayNetCDF == 476) {
 			indiceArrayNetCDF--;
@@ -90,7 +90,7 @@ public class Tile {
 
 	public double latitudNetCDF(double lat) {
 
-		double resolutionNetCDF = (Parametros.y2 - Parametros.y1) / Parametros.celdasLatNet;
+		double resolutionNetCDF = (double)(Parametros.y2 - Parametros.y1) / Parametros.celdasLatNet;
 		double indiceArrayNetCDF = Math.floor((lat - Parametros.y1) / resolutionNetCDF);
 		if (indiceArrayNetCDF == 401) {
 			indiceArrayNetCDF--;
@@ -166,13 +166,16 @@ public class Tile {
 		// A buffer is a linear, finite sequence of elements of a specific primitive
 		// type.
 		ByteBuffer buffer = ByteBuffer.allocate(Parametros.resolucionBuffer);
+		
+		
 
 		// Buffer alloca en cadena
 		buffer.put((byte) nTiempo); // 1 byte por nivel
 
 		// ***************************
-		buffer.putInt(iTiempo); // 8 byte por index tile
-
+		buffer.putInt(iTiempo.año); // 8 byte por index tile
+		buffer.putInt(iTiempo.mes);
+		buffer.putInt(iTiempo.dia);
 		buffer.put((byte) nEspacio);
 		buffer.putInt(iLat);
 		buffer.putInt(iLon);
@@ -190,7 +193,9 @@ public class Tile {
 		ByteBuffer buffer = ByteBuffer.wrap(claveBin);
 
 		nTiempo = buffer.get();
-		iTiempo = buffer.getInt();
+		iTiempo.año = buffer.getInt();
+		iTiempo.mes = buffer.getInt();
+		iTiempo.dia = buffer.getInt();
 		nEspacio = buffer.get();
 		iLat = buffer.getInt();
 		iLon = buffer.getInt();
@@ -203,15 +208,8 @@ public class Tile {
 	// VALOR->BINARIO
 	public byte[] encodeValor() throws IOException {
 		
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		ObjectOutputStream oos = new ObjectOutputStream(bos);
-
-		oos.writeObject(arrayTile);
-		byte[] bytes = bos.toByteArray();
-
-		/*
 		ByteBuffer buffer = ByteBuffer.allocate(Parametros.resolucionCubo * 4);
-
+		
 		int i = 0;
 		for (int tiempo = 0; tiempo < 24; tiempo++) {
 			for (int lat = 0; lat < 64; lat++) {
@@ -224,20 +222,13 @@ public class Tile {
 					}
 				}
 			}
-		}*/
-		return bytes;
+		}
+		return buffer.array();
 	}
 
 	// BINARIO->VALOR
 	public void decodeValor(byte[] valorBin) throws IOException, ClassNotFoundException {
 		
-		ByteArrayInputStream bis = new ByteArrayInputStream(valorBin);
-		ObjectInputStream ois = new ObjectInputStream(bis);
-
-		int[][][][][] arrayDeserializzato = (int[][][][][]) ois.readObject();
-		arrayTile = arrayDeserializzato;
-	
-		/*
 		ByteBuffer buffer = ByteBuffer.wrap(valorBin);
 
 		for (int tiempo = 0; tiempo < 24; tiempo++) {
@@ -253,7 +244,19 @@ public class Tile {
 				}
 			}
 		}
-		*/
+		
+	}
+	
+	public void safe(BaseDatos db) throws IOException {
+		byte[] clave = encodeClave();
+		byte[] valor = encodeValor();
+		db.put(clave, valor);
+	}
+	
+	public void load(BaseDatos db) throws ClassNotFoundException, IOException {
+		byte[] clave = encodeClave();
+		byte[] valor = db.get(clave);
+		decodeValor(valor);
 	}
 
 }

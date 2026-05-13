@@ -6,7 +6,7 @@ public interface BaseDatos {
 	void put(Tile tile) throws Exception;
 	
 	//get
-	//???
+	void get(Tile tile) throws Exception;
 	
 	//update
 	//void update(Tile tile) throws Exception;
@@ -16,4 +16,14 @@ public interface BaseDatos {
 	
 	//close
 	void close();
+
+	void put(byte[] clave, byte[] valor);
+
+	byte[] get(byte[] clave);
+
+	/*
+	void put(byte[] clave, byte[] valor);
+
+	byte[] get(byte[] clave);
+	*/
 }
