@@ -6,7 +6,7 @@ import java.io.IOException;
 import org.rocksdb.Options;
 import org.rocksdb.RocksDB;
 import org.rocksdb.RocksDBException;
-
+/*
 public class RocksDBBaseDatos implements BaseDatos {
 	
 	RocksDB db;
@@ -41,3 +41,4 @@ public class RocksDBBaseDatos implements BaseDatos {
 		db.close();
 	}
 }
+*/

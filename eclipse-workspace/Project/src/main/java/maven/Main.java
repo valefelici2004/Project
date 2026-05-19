@@ -1,5 +1,6 @@
 package maven;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.rocksdb.Options;
@@ -25,8 +26,6 @@ public class Main {
 
 		Tile tile = new Tile();
 		
-		RocksDBBaseDatos db = new RocksDBBaseDatos("/Users/valefelici2004/Desktop/file");
-		db.put(tile);
 
 		// exemplo tile 1 dia
 		for (int lon = 0; lon < Parametros.celdasEspacioCubo; lon++) {
@@ -91,5 +90,6 @@ public class Main {
 		RocksDBBaseDatos db1 = new RocksDBBaseDatos("/Users/valefelici2004/Desktop/file");
 		tile.safe(db1);
 		tile.load(db1);
+		
 	}
 }
