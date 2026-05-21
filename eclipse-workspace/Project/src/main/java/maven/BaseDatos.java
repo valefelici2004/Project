@@ -8,22 +8,17 @@ public interface BaseDatos {
 	//get
 	void get(Tile tile) throws Exception;
 	
-	//update
-	//void update(Tile tile) throws Exception;
-	
-	//delete
-	//void delete(Tile tile) throws Exception;
-	
 	//close
 	void close();
-
-	void put(byte[] clave, byte[] valor);
-
-	byte[] get(byte[] clave);
 
 	/*
 	void put(byte[] clave, byte[] valor);
 
 	byte[] get(byte[] clave);
-	*/
+
+	
+	void put(byte[] clave, byte[] valor);
+
+	byte[] get(byte[] clave);*/
+	
 }

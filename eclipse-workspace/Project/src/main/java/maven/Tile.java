@@ -8,18 +8,23 @@ import java.io.ObjectOutputStream;
 import java.nio.ByteBuffer;
 
 public class Tile {
-	byte nEspacio = 1;
-	int iLon = 1;
-	int iLat = 2;
-	byte nProf = 1;
-	int iProf = 2;
-	byte nTemp = 1;
-	int iTemp = 1;
+	byte nEspacio = 0;
+	int iLon = 0;
+	int iLat = 0;
+	byte nProf = 0;
+	int iProf = 0;
+	byte nTemp = 0;
+	int iTemp = 0;
 	byte nTiempo = 0;
 	Tiempo iTiempo = new Tiempo();
+	
+
 
 	int[][][][][] arrayTile = new int[Parametros.celdasTiempoCubo][Parametros.celdasEspacioCubo][Parametros.celdasEspacioCubo][Parametros.celdasPTCubo][Parametros.celdasPTCubo]; // array 5 dimensiones --> ipercubo
 
+	
+	
+	
 	// N.B.
 	// niveles 0,1,2...
 	// tiles por el nivel 0:1, por el nivel 1:0,1,2, por el nivel 2:0,1,2,3,4,5,6
@@ -208,9 +213,10 @@ public class Tile {
 	// VALOR->BINARIO
 	public byte[] encodeValor() throws IOException {
 		
+		/*
+		//ByteBuffer
 		ByteBuffer buffer = ByteBuffer.allocate(Parametros.resolucionCubo * 4);
-		
-		int i = 0;
+	
 		for (int tiempo = 0; tiempo < 24; tiempo++) {
 			for (int lat = 0; lat < 64; lat++) {
 				for (int lon = 0; lon < 64; lon++) {
@@ -223,12 +229,26 @@ public class Tile {
 				}
 			}
 		}
-		return buffer.array();
+		return buffer.array();*/
+		
+		//ObjectOutputStream (guarda tambien los metadatos)
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+	    ObjectOutputStream out = new ObjectOutputStream(bos);
+
+	    out.writeObject(arrayTile);
+
+	    out.flush();
+	    out.close();
+
+	    return bos.toByteArray();
+	    
 	}
 
 	// BINARIO->VALOR
 	public void decodeValor(byte[] valorBin) throws IOException, ClassNotFoundException {
 		
+		/*
+		//ByteBuffer
 		ByteBuffer buffer = ByteBuffer.wrap(valorBin);
 
 		for (int tiempo = 0; tiempo < 24; tiempo++) {
@@ -237,16 +257,24 @@ public class Tile {
 					for (int prof = 0; prof < 10; prof++) {
 						for (int temp = 0; temp < 10; temp++) {
 							arrayTile[tiempo][lat][lon][prof][temp] = buffer.getInt();
-							;
 
 						}
 					}
 				}
 			}
-		}
+		}*/
+		
+		//ObjectOutputStream
+		ByteArrayInputStream bis = new ByteArrayInputStream(valorBin);
+	    ObjectInputStream in = new ObjectInputStream(bis);
+
+	    int[][][][][] data = (int[][][][][]) in.readObject();
+
+	    this.arrayTile = data;
 		
 	}
 	
+	/*
 	public void safe(BaseDatos db) throws IOException {
 		byte[] clave = encodeClave();
 		byte[] valor = encodeValor();
@@ -257,6 +285,6 @@ public class Tile {
 		byte[] clave = encodeClave();
 		byte[] valor = db.get(clave);
 		decodeValor(valor);
-	}
+	}*/
 
 }

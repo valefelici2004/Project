@@ -17,6 +17,7 @@ import ucar.nc2.Variable;
 public class Main {
 	public static void main(String[] args) throws IOException, InvalidRangeException, RocksDBException, ClassNotFoundException {
 
+		RocksDBBaseDatos db1 = new RocksDBBaseDatos("/Users/valefelici2004/Desktop/file");
 		// Abrir file NetCDF
 		String filenombre = "/Users/valefelici2004/Desktop/roms_002_20260321_0000.nc4";
 		NetcdfFile ncfile = NetcdfFiles.open(filenombre);
@@ -87,9 +88,9 @@ public class Main {
 
 		ncfile.close();
 		
-		RocksDBBaseDatos db1 = new RocksDBBaseDatos("/Users/valefelici2004/Desktop/file");
-		tile.safe(db1);
-		tile.load(db1);
+		//RocksDBBaseDatos db1 = new RocksDBBaseDatos("/Users/valefelici2004/Desktop/file");
+		db1.put(tile);
+		
 		
 	}
 }
