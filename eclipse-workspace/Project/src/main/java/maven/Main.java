@@ -1,23 +1,14 @@
 package maven;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.rocksdb.Options;
-import org.rocksdb.RocksDB;
-import org.rocksdb.RocksDBException;
-
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
-import ucar.ma2.InvalidRangeException;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.NetcdfFiles;
 import ucar.nc2.Variable;
 
 public class Main {
-	public static void main(String[] args) throws IOException, InvalidRangeException, RocksDBException, ClassNotFoundException {
+	public static void main(String[] args) throws Exception {
 
-		RocksDBBaseDatos db1 = new RocksDBBaseDatos("/Users/valefelici2004/Desktop/file");
 		// Abrir file NetCDF
 		String filenombre = "/Users/valefelici2004/Desktop/roms_002_20260321_0000.nc4";
 		NetcdfFile ncfile = NetcdfFiles.open(filenombre);
@@ -33,7 +24,7 @@ public class Main {
 			for (int lat = 0; lat < Parametros.celdasEspacioCubo; lat++) {
 				for (int prof = 0; prof < Parametros.celdasPTCubo; prof++) {
 					for (int t = 0; t < Parametros.celdasPTCubo; t++) {
-						for (int tiempo = 0; tiempo < 24; tiempo++) {
+						for (int tiempo = 0; tiempo < Parametros.celdasTiempoCubo; tiempo++) {
 
 							// valores reales desde al cubo al NETcdf, donde cada celda corresponde a una
 							// hora
@@ -88,9 +79,9 @@ public class Main {
 
 		ncfile.close();
 		
-		//RocksDBBaseDatos db1 = new RocksDBBaseDatos("/Users/valefelici2004/Desktop/file");
-		db1.put(tile);
-		
+		RocksDBBaseDatos db = new RocksDBBaseDatos("/Users/valefelici2004/Desktop/fileDB");
+		tile.safe(db);
+		db.close();
 		
 	}
 }

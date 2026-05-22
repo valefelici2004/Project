@@ -8,7 +8,7 @@ public class Tiempo {
 	int mes;
 	int dia;
 
-	public int añoBisesto(int año) {
+	public static int añoBisesto(int año) {
 		boolean x = Year.isLeap(año);
 		if (x == true)
 			return 366;

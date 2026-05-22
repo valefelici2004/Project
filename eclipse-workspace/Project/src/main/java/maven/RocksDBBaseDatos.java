@@ -1,40 +1,37 @@
 package maven;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.rocksdb.Options;
 import org.rocksdb.RocksDB;
 import org.rocksdb.RocksDBException;
 
 public class RocksDBBaseDatos implements BaseDatos {
-	
-	RocksDB db;
-	
-	//Constructor que cuando inizializo el objecto abre el db
-	public RocksDBBaseDatos(String file) throws RocksDBException {
+
+	static {
 		RocksDB.loadLibrary();
-		Options options = new Options().setCreateIfMissing(true); //ajustes
-		db = RocksDB.open(options, file);
 	}
-	
-	//metodo PUT
+
+	RocksDB db;
+
+	// Constructor
+	public RocksDBBaseDatos(String file) throws RocksDBException {
+		Options options = new Options().setCreateIfMissing(true);
+		db = RocksDB.open(options, file);
+		options.close();
+	}
+
+	// PUT
 	@Override
-	public void put(Tile tile) throws RocksDBException, IOException{
-		byte clave[] = tile.encodeClave();
-		byte valor[] = tile.encodeValor();
+	public void put(byte[] clave, byte[] valor) throws RocksDBException {
 		db.put(clave, valor);
 	}
-	
-	//metodo GET
+
+	// GET
 	@Override
-	public void get(Tile tile) throws RocksDBException, ClassNotFoundException, IOException {
-		byte clave[] = tile.encodeClave();
-		byte valor[] = db.get(clave);
-		tile.decodeValor(valor);
+	public byte[] get(byte[] clave) throws RocksDBException {
+		return db.get(clave);
 	}
-	
-	//metodo CLOSE
+
+	// CLOSE
 	@Override
 	public void close() {
 		db.close();

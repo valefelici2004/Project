@@ -1,24 +1,13 @@
 package maven;
 
 public interface BaseDatos {
-	
-	//put
-	void put(Tile tile) throws Exception;
-	
-	//get
-	void get(Tile tile) throws Exception;
-	
-	//close
+
+	// PUT
+	void put(byte[] clave, byte[] valor) throws Exception;
+
+	// GET
+	byte[] get(byte[] clave) throws Exception;
+
+	// CLOSE
 	void close();
-
-	/*
-	void put(byte[] clave, byte[] valor);
-
-	byte[] get(byte[] clave);
-
-	
-	void put(byte[] clave, byte[] valor);
-
-	byte[] get(byte[] clave);*/
-	
 }

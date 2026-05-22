@@ -18,17 +18,16 @@ public class Parametros {
 	public static final int minT = -10;
 	public static final int maxT = 30;
 
-	//Cubo
+	// Cubo
 	public static final int celdasEspacioCubo = 64;
 	public static final int celdasPTCubo = 10;
 	public static final int celdasTiempoCubo = 24;
 
-	//NetCDF
+	// NetCDF
 	public static final int celdasLonNet = 476;
 	public static final int celdasLatNet = 401;
 	public static final int arrayProf[] = { 4000, 3000, 2000, 1500, 1000, 500, 400, 250, 150, 125, 75, 35, 20, 10 };
-	
-	public static final int resolucionBuffer = 4+7*4;
-	public static final int resolucionCubo = 24*64*64*10*10;
 
+	public static final int resolucionBuffer = 4 + 7 * 4;
+	public static final int resolucionCubo = 24 * 64 * 64 * 10 * 10;
 }

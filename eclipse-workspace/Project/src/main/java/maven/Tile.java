@@ -274,17 +274,17 @@ public class Tile {
 		
 	}
 	
-	/*
-	public void safe(BaseDatos db) throws IOException {
+	
+	public void safe(BaseDatos db) throws Exception {
 		byte[] clave = encodeClave();
 		byte[] valor = encodeValor();
 		db.put(clave, valor);
 	}
 	
-	public void load(BaseDatos db) throws ClassNotFoundException, IOException {
+	public void load(BaseDatos db) throws Exception {
 		byte[] clave = encodeClave();
 		byte[] valor = db.get(clave);
 		decodeValor(valor);
-	}*/
+	}
 
 }
