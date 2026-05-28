@@ -13,10 +13,11 @@ public class RocksDBBaseDatos implements BaseDatos {
 	RocksDB db;
 
 	// Constructor
-	public RocksDBBaseDatos(String file) throws RocksDBException {
-		Options options = new Options().setCreateIfMissing(true);
-		db = RocksDB.open(options, file);
-		options.close();
+	public RocksDBBaseDatos(String path) throws RocksDBException {
+		try (Options options = new Options()) {
+			options.setCreateIfMissing(true);
+			this.db = RocksDB.open(options, path);
+		}
 	}
 
 	// PUT

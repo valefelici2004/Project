@@ -28,6 +28,6 @@ public class Parametros {
 	public static final int celdasLatNet = 401;
 	public static final int arrayProf[] = { 4000, 3000, 2000, 1500, 1000, 500, 400, 250, 150, 125, 75, 35, 20, 10 };
 
-	public static final int resolucionBuffer = 4 + 7 * 4;
-	public static final int resolucionCubo = 24 * 64 * 64 * 10 * 10;
+	public static final int resolucionBuffer = 1 * 4 + 4 * 7; //1 byte por niveles de las 4 dimensiones, 4 bytes por los identificadores
+	public static final int resolucionCubo =  64 * 64 * 10 * 10;
 }
