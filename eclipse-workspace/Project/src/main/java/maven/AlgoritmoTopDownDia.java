@@ -11,7 +11,6 @@ public class AlgoritmoTopDownDia {
 	public static void esegui(Query q) throws Exception {
 
 		// Abrir file NetCDF
-		String filenombre = "/Users/valefelici2004/Desktop/roms_002_20260321_0000.nc4";
 		NetcdfFile ncfile = NetcdfFiles.open(q.pathNetCDF);
 
 		// ACCEDER ARRAY 4D Y OBTENER EL VALOR DE TEMP
@@ -88,7 +87,7 @@ public class AlgoritmoTopDownDia {
 
 		ncfile.close();
 
-		RocksDBBaseDatos db = new RocksDBBaseDatos("/Users/valefelici2004/Desktop/fileDB");
+		RocksDBBaseDatos db = new RocksDBBaseDatos(q.pathDB);
 		tile.save(db);
 		db.close();
 	}

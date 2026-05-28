@@ -1,7 +1,5 @@
 package maven;
 
-import java.nio.ByteBuffer;
-
 public class TileHoja extends Tile {
 	
 	public TileHoja(){

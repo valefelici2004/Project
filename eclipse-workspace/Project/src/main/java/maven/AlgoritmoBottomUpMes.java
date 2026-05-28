@@ -8,6 +8,7 @@ public class AlgoritmoBottomUpMes {
 	
 		TileInterno tileMes = new TileInterno(q.año, q.mes);
 		
+		tileMes.nTiempo = 1;
 		tileMes.nEspacio = q.nEspacio;
         tileMes.iLat = q.iLat;
         tileMes.iLon = q.iLon;
@@ -25,13 +26,13 @@ public class AlgoritmoBottomUpMes {
 			tileDia.iTiempo.año = q.año;
 			tileDia.iTiempo.mes = q.mes;
 			tileDia.iTiempo.dia = tiempoMes;
-			tileDia.nEspacio = 0;
-			tileDia.iLat = 0;
-			tileDia.iLon = 0;
-			tileDia.nProf = 0;
-			tileDia.iProf = 0;
-			tileDia.nTemp = 0;
-			tileDia.iTemp = 0;
+			tileMes.nEspacio = q.nEspacio;
+	        tileMes.iLat = q.iLat;
+	        tileMes.iLon = q.iLon;
+	        tileMes.nProf = q.nProf;
+	        tileMes.iProf = q.iProf;
+	        tileMes.nTemp = q.nTemp;
+	        tileMes.iTemp = q.iTemp;
 
 			tileDia.load(db);
 

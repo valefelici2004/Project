@@ -30,4 +30,6 @@ public class Parametros {
 
 	public static final int resolucionBuffer = 1 * 4 + 4 * 7; //1 byte por niveles de las 4 dimensiones, 4 bytes por los identificadores
 	public static final int resolucionCubo =  64 * 64 * 10 * 10;
+	
+	public static final int meses = 12;
 }

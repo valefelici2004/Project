@@ -8,6 +8,7 @@ public class AlgoritmoBottomUpAño {
 	
 		TileInterno tileAño= new TileInterno(q.año);
 		
+		tileAño.nTiempo = 0;
 		tileAño.nEspacio = q.nEspacio;
         tileAño.iLat = q.iLat;
         tileAño.iLon = q.iLon;
@@ -18,20 +19,19 @@ public class AlgoritmoBottomUpAño {
 
 		
 	
-		for (int tiempoMes = 1; tiempoMes <= 12; tiempoMes++) {
+		for (int tiempoMes = 1; tiempoMes <= Parametros.meses; tiempoMes++) {
 
 			TileInterno tileMes = new TileInterno(q.año, tiempoMes);
 			tileMes.nTiempo = 1;
 			tileMes.iTiempo.año = q.año;
 			tileMes.iTiempo.mes = tiempoMes;
-			tileMes.nEspacio = 0;
-			tileMes.iLat = 0;
-			tileMes.iLon = 0;
-			tileMes.nProf = 0;
-			tileMes.iProf = 0;
-			tileMes.nTemp = 0;
-			tileMes.iTemp = 0;
-
+			tileMes.nEspacio = q.nEspacio;
+			 tileAño.iLat = q.iLat;
+		        tileAño.iLon = q.iLon;
+		        tileAño.nProf = q.nProf;
+		        tileAño.iProf = q.iProf;
+		        tileAño.nTemp = q.nTemp;
+		        tileAño.iTemp = q.iTemp;
 			tileMes.load(db);
 
 			for (int lat = 0; lat < Parametros.celdasEspacioCubo; lat++) {
