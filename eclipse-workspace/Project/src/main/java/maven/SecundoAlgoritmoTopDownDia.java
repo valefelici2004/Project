@@ -1,20 +1,23 @@
 package maven;
 
 import ucar.ma2.Array;
-import ucar.ma2.IndexIterator;
+import ucar.ma2.Index;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.NetcdfFiles;
 import ucar.nc2.Variable;
 
-public class AlgoritmoTopDownDia {
-
+public class SecundoAlgoritmoTopDownDia {
 	public static void esegui(Query q) throws Exception {
 
 		// Abrir file NetCDF
 		NetcdfFile ncfile = NetcdfFiles.open(q.pathNetCDF);
 
 		// ACCEDER ARRAY 4D Y OBTENER EL VALOR DE TEMP
-		Variable temperadura = ncfile.findVariable("temp"); // Find a Variable, with the specified (escaped full) name.
+		Variable temperatura = ncfile.findVariable("temp"); // Find a Variable, with the specified (escaped full) name.
+		int[] shape = temperatura.getShape();
+		int nProfTotale = shape[1];
+		int nLatTotale = shape[2];
+		int nLonTotale = shape[3];
 
 		TileHoja tile = new TileHoja();
 
@@ -29,18 +32,23 @@ public class AlgoritmoTopDownDia {
 		tile.iProf = q.iProf;
 		tile.nTemp = q.nTemp;
 		tile.iTemp = q.iTemp;
-		
+
 		int numero = 1;
 
 		// exemplo tile 1 dia
 		for (int tiempo = 0; tiempo < Parametros.horas; tiempo++) {
-			System.out.println("TIEMPO OKE");
+
+			int[] inicio = new int[] { tiempo, 0, 0, 0 };
+			int[] ancho = new int[] { 1, nProfTotale, nLatTotale, nLonTotale };
+			Array fetta = temperatura.read(inicio, ancho); // solo 1 ora in RAM
+			Index idx = fetta.getIndex();
+
 			for (int lon = 0; lon < Parametros.celdasEspacioCubo; lon++) {
-				System.out.println("LON OKE");
+
 				for (int lat = 0; lat < Parametros.celdasEspacioCubo; lat++) {
-					System.out.println("LAT OKE");
+
 					for (int prof = 0; prof < Parametros.celdasPTCubo; prof++) {
-						System.out.println("PROF OKE");
+
 						for (int t = 0; t < Parametros.celdasPTCubo; t++) {
 
 							// valores reales desde al cubo al NETcdf, donde cada celda corresponde a una
@@ -53,46 +61,43 @@ public class AlgoritmoTopDownDia {
 							// index NETcdf
 							int inicioLon = (int) tile.longitudNetCDF(lonRange.min);
 							int finLon = (int) tile.longitudNetCDF(lonRange.max);
-							int anchoLon = (finLon - inicioLon + 1);
+							// int anchoLon = (finLon - inicioLon + 1);
 							int inicioLat = (int) tile.latitudNetCDF(latRange.min);
 							int finLat = (int) tile.latitudNetCDF(latRange.max);
-							int anchoLat = (int) (finLat - inicioLat + 1);
+							// int anchoLat = (int) (finLat - inicioLat + 1);
 							int inicioProf = (int) tile.profundidadNetCDF(profRange.min); // min prof tiene index >
 							// porque al reverse
 							int finProf = (int) tile.profundidadNetCDF(profRange.max); // max prof tiene index < porque
 
 							// al reverse
 
-							int anchoProf = (inicioProf - finProf + 1);// hago fin-inicio porque al reverse por la prof
-
-							int[] inicio = new int[] { tiempo, finProf, inicioLat, inicioLon };
-							int[] ancho = new int[] { 1, anchoProf, anchoLat, anchoLon }; // dim 1 de tiempo porque es
-							// una celda
-
-							Array datos = temperadura.read(inicio, ancho); // Read a section of the data for this
-							// Variable and return a memory resident
-							// Array.
 							int count = 0;
+							// ***********************************************************+
 
-							IndexIterator it = datos.getIndexIterator(); // Get an index iterator for traversing the
-							// array in canonical order.
-							while (it.hasNext()) { // control si hay un proximo valor
-								double valor = it.getDoubleNext(); // guarda el valor+va al valor proximo
-								if (valor >= tempRange.min && valor <= tempRange.max) {
-									count++;
+							for (int p = finProf; p <= inicioProf; p++) {
+								for (int la = inicioLat; la <= finLat; la++) {
+									for (int lo = inicioLon; lo <= finLon; lo++) {
+
+										double valor = fetta.getDouble(idx.set(0, p, la, lo));
+
+										if (valor >= tempRange.min && valor <= tempRange.max) {
+											count++;
+										}
+									}
 								}
 							}
 
-							
+							// **************************************************************
+
 							tile.arrayTile[tiempo][lat][lon][prof][t] = count;
-							System.out.println("ARRAY "+numero);
+							System.out.println("ARRAY " + numero);
 							numero++;
+
 						}
 					}
 				}
 			}
 		}
-
 		ncfile.close();
 
 		RocksDBBaseDatos db = new RocksDBBaseDatos(q.pathDB);

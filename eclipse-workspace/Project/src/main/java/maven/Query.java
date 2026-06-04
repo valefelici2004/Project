@@ -1,10 +1,10 @@
 package maven;
 
 public class Query {
-	byte nTiempo;
-	int año;
+	byte nTiempo ;
+	int año ;
     int mes;
-    int dia;
+    int dia ;
     byte nEspacio;
     int iLat;
     int iLon;

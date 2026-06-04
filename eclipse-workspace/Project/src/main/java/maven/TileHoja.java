@@ -3,7 +3,7 @@ package maven;
 public class TileHoja extends Tile {
 	
 	public TileHoja(){
-		arrayTile = new int[Parametros.celdasTiempoCubo][Parametros.celdasEspacioCubo][Parametros.celdasEspacioCubo][Parametros.celdasPTCubo][Parametros.celdasPTCubo]; // array 5 dimensiones --> ipercubo	
+		arrayTile = new int[Parametros.horas][Parametros.celdasEspacioCubo][Parametros.celdasEspacioCubo][Parametros.celdasPTCubo][Parametros.celdasPTCubo]; // array 5 dimensiones --> ipercubo	
 		
 	}
 	

@@ -5,20 +5,18 @@ public class AlgoritmoBottomUpAño {
 
 		// abro db
 		RocksDBBaseDatos db = new RocksDBBaseDatos(q.pathDB);
-	
-		TileInterno tileAño= new TileInterno(q.año);
-		
+
+		TileInterno tileAño = new TileInterno(q.año);
+
 		tileAño.nTiempo = 0;
 		tileAño.nEspacio = q.nEspacio;
-        tileAño.iLat = q.iLat;
-        tileAño.iLon = q.iLon;
-        tileAño.nProf = q.nProf;
-        tileAño.iProf = q.iProf;
-        tileAño.nTemp = q.nTemp;
-        tileAño.iTemp = q.iTemp;
+		tileAño.iLat = q.iLat;
+		tileAño.iLon = q.iLon;
+		tileAño.nProf = q.nProf;
+		tileAño.iProf = q.iProf;
+		tileAño.nTemp = q.nTemp;
+		tileAño.iTemp = q.iTemp;
 
-		
-	
 		for (int tiempoMes = 1; tiempoMes <= Parametros.meses; tiempoMes++) {
 
 			TileInterno tileMes = new TileInterno(q.año, tiempoMes);
@@ -26,12 +24,12 @@ public class AlgoritmoBottomUpAño {
 			tileMes.iTiempo.año = q.año;
 			tileMes.iTiempo.mes = tiempoMes;
 			tileMes.nEspacio = q.nEspacio;
-			 tileAño.iLat = q.iLat;
-		        tileAño.iLon = q.iLon;
-		        tileAño.nProf = q.nProf;
-		        tileAño.iProf = q.iProf;
-		        tileAño.nTemp = q.nTemp;
-		        tileAño.iTemp = q.iTemp;
+			tileAño.iLat = q.iLat;
+			tileAño.iLon = q.iLon;
+			tileAño.nProf = q.nProf;
+			tileAño.iProf = q.iProf;
+			tileAño.nTemp = q.nTemp;
+			tileAño.iTemp = q.iTemp;
 			tileMes.load(db);
 
 			for (int lat = 0; lat < Parametros.celdasEspacioCubo; lat++) {
@@ -39,7 +37,7 @@ public class AlgoritmoBottomUpAño {
 					for (int prof = 0; prof < Parametros.celdasPTCubo; prof++) {
 						for (int temp = 0; temp < Parametros.celdasPTCubo; temp++) {
 
-							// sumo 
+							// sumo
 							int suma = 0;
 							for (int t = 0; t < tileMes.arrayTile.length; t++) {
 								suma += tileMes.arrayTile[t][lat][lon][prof][temp];

@@ -18,7 +18,7 @@ public class Tile {
 	// CLAVE->BINARIO
 	public byte[] encodeClave() {
 
-		ByteBuffer buffer = ByteBuffer.allocate(Parametros.resolucionBuffer); //Objecto buffer - container for data
+		ByteBuffer buffer = ByteBuffer.allocate(Parametros.resolucionClave); //Objecto buffer - container for data
 																			  // Buffer alloca en cadena
 		buffer.put((byte) nTiempo); // 1 byte por nivel
 		buffer.putInt(iTiempo.año); // 4 byte por index 
@@ -56,7 +56,7 @@ public class Tile {
 	// VALOR->BINARIO
 	public byte[] encodeValor() {
 
-		ByteBuffer buffer = ByteBuffer.allocate(arrayTile.length * Parametros.resolucionCubo * 4);
+		ByteBuffer buffer = ByteBuffer.allocate(arrayTile.length * Parametros.LonLatProfTemp * 4);
 	
 		for (int tiempo = 0; tiempo < arrayTile.length; tiempo++) {
 			for (int lat = 0; lat < Parametros.celdasEspacioCubo; lat++) {
