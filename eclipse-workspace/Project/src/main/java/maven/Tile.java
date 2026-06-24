@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 public class Tile {
 	byte nTiempo;
 	Tiempo iTiempo = new Tiempo();
+	
 	byte nEspacio;
 	int iLon;
 	int iLat;
@@ -14,6 +15,32 @@ public class Tile {
 	int iTemp;
 
 	int[][][][][] arrayTile;
+	
+	// TEMPERATURA
+			public ValorReal temperaturaCubo(int j) {
+
+				double nTiles = Math.pow(2, nTemp + 1) - 1;
+				double resolucionTile = (Parametros.maxT - Parametros.minT) / ((Math.ceil(nTiles / 2)));
+				double inicioTile = (Parametros.minT + iTemp * resolucionTile * (0.5));
+				double finTile = (Parametros.minT + iTemp * resolucionTile * (0.5) + resolucionTile);
+				if (inicioTile < Parametros.minT || finTile > Parametros.maxT) { // control que dado el input el tile esta en el
+																					// range
+					throw new IllegalArgumentException("Tile fuera de el range");
+				}
+				double resolutionElemento = resolucionTile / Parametros.celdasPTCubo;
+				double inicioElemento = inicioTile + j * resolutionElemento;
+				double finElemento = inicioTile + (j + 1) * resolutionElemento;
+				if (inicioElemento < Parametros.minT || finElemento > Parametros.maxT) { // control que dado el input el
+																							// elemento esta en el range
+					throw new IllegalArgumentException("Elemento fuera de el range");
+				}
+
+				ValorReal valores = new ValorReal();
+				valores.min = inicioElemento;
+				valores.max = finElemento;
+
+				return valores;
+			}
 	
 	// CLAVE->BINARIO
 	public byte[] encodeClave() {

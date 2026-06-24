@@ -33,8 +33,6 @@ public class SecundoAlgoritmoTopDownDia {
 		tile.nTemp = q.nTemp;
 		tile.iTemp = q.iTemp;
 
-		int numero = 1;
-
 		// exemplo tile 1 dia
 		for (int tiempo = 0; tiempo < Parametros.horas; tiempo++) {
 
@@ -90,8 +88,6 @@ public class SecundoAlgoritmoTopDownDia {
 							// **************************************************************
 
 							tile.arrayTile[tiempo][lat][lon][prof][t] = count;
-							System.out.println("ARRAY " + numero);
-							numero++;
 
 						}
 					}
