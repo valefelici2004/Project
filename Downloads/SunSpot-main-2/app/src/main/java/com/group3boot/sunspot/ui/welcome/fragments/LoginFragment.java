@@ -1,4 +1,4 @@
-package com.group3boot.sunspot.ui.welcome.fragents;
+package com.group3boot.sunspot.ui.welcome.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,16 +16,9 @@ import android.widget.Button;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.group3boot.sunspot.R;
+import com.group3boot.sunspot.ui.home.HomeActivity;
 
 public class LoginFragment extends Fragment {
-    public static LoginFragment newInstance(String param1, String param2) {
-        LoginFragment fragment = new LoginFragment();
-        /*Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);*/
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,10 +35,11 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         //BOTTONE ACCESSO
-        TextInputLayout emailLayout = view.findViewById(R.id.emailLayout);
+        //TextInputLayout emailLayout = view.findViewById(R.id.emailLayout);
         TextInputEditText email = view.findViewById(R.id.email);
-        TextInputLayout pwLayout = view.findViewById(R.id.passwordLayout);
+        //TextInputLayout pwLayout = view.findViewById(R.id.passwordLayout);
         TextInputEditText pw = view.findViewById(R.id.password);
         Button bottoneAccesso = view.findViewById(R.id.accesso);
         bottoneAccesso.setOnClickListener(new View.OnClickListener() {
@@ -59,11 +53,11 @@ public class LoginFragment extends Fragment {
 
                 //intent esplicito login-->home CAMBIARE MAIN CON HOME!!!
                 Intent intent = new Intent();
-                intent.setClass(getContext(), MainActivity.class);
+                intent.setClass(getContext(), HomeActivity.class);
                 startActivity(intent);
 
                 //Modo con NAVIGATION
-                Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_mainActivity);
+                Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_homeActivity);
 
             }
         });

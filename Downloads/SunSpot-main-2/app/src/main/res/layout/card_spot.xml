@@ -13,14 +13,31 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Media -->
-        <ImageView
+        <!-- Media con overlay del cuore -->
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="194dp"
-            android:id="@+id/image_view"
-            app:srcCompat="@drawable/ic_launcher_background"
-            android:scaleType="centerCrop"
-            />
+            android:layout_height="194dp">
+
+            <ImageView
+                android:id="@+id/image_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:srcCompat="@drawable/ic_launcher_background"
+                android:scaleType="centerCrop"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <CheckBox
+                android:id="@+id/favoriteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin"
+                android:button="@drawable/selector_favorite"
+                android:background="@android:color/transparent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -28,7 +45,8 @@
             android:text="Titolo"
             android:id="@+id/titolo"
             android:layout_margin="@dimen/margin"
-            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textStyle="bold"
             />
         <TextView
             android:layout_width="wrap_content"

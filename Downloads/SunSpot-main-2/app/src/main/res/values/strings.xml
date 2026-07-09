@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">SunSpot</string>
-    <string name="accedi">Accedi</string>
+    <string name="sign_in">Sign In</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="o">o</string>
@@ -11,4 +11,9 @@
     <string name="user">USER</string>
     <string name="home">HOME</string>
     <string name="maps">MAPS</string>
+    <string name="accedi">Accedi</string>
+    <string name="nome">Nome</string>
+    <string name="cognome">Cognome</string>
+    <string name="conferma_password">Conferma password</string>
+    <string name="sign_up">Sign up</string>
 </resources>

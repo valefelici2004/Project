@@ -1,4 +1,4 @@
-package com.group3boot.sunspot.ui.welcome.fragents;
+package com.group3boot.sunspot.ui.welcome.fragments;
 
 import android.os.Bundle;
 
